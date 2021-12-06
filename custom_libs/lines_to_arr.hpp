@@ -6,7 +6,7 @@
 #include<fstream>
 #include<iostream>
 
-std::vector<std::string> lines_to_arr( std::string filename )
+std::vector<std::string> lines_to_str_arr( std::string filename )
 {
     std::vector<std::string> lines;
     std::string line;
