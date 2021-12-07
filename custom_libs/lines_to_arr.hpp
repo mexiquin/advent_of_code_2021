@@ -4,9 +4,14 @@
 #include<vector>
 #include<string>
 #include<fstream>
+#include<tuple>
 #include<iostream>
 
 using namespace std;
+
+
+// string alias, denotes string destined to be converted to vec<int>
+typedef string int_str;
 
 vector<string> lines_to_str_arr( string filename )
 {
@@ -29,9 +34,9 @@ vector<string> lines_to_str_arr( string filename )
 }
 
 // TODO day 4 - 2D int array load
-std::vector<int> str_to_intvec( std::string victim_str )
+vector<int> str_to_intvec( int_str victim_str )
 {
-    std::vector<int> temp_vec;
+    vector<int> temp_vec;
 
     for ( int i = 0; i < victim_str.size( ); i++ )
     {
@@ -39,29 +44,47 @@ std::vector<int> str_to_intvec( std::string victim_str )
     }
     return temp_vec;
 }
-vector<vector<int>> file_to_arr( string filename )
+tuple<vector<int>, vector<vector<vector<int>>>> file_to_arr( string filename )
 {
-    vector<vector<int>> lines;
-    std::vector<int> temp_vec;
+    vector<vector<vector<int>>> boards;
+    vector<vector<int>> board;
+    vector<int> pull_nums;
+
+    vector<int> temp_vec;
     string line;
+    int iter=0;
 
     ifstream input_file( filename );
     if ( !input_file.is_open( ) )
     {
         cerr << "Could not open file: " << filename << endl;
-        return {};
+        exit( 1 );
     }
 
+    // get first line for pull order
+    if ( getline( input_file, line ) )
+    {
+        pull_nums = str_to_intvec( line );
+    }
+    else
+    {
+        cout << "Error reading first line of file" << endl;
+        exit( 1 );
+    }
+
+    // TODO - subsequent lines (blank-newline separated) are 2d grids
     while ( getline( input_file, line ) )
     {
-        // convert line to char vector
-        temp_vec = str_to_intvec( line );
-
-        // place tuple into main vector
-        lines.push_back( temp_vec );
+        // Populate temp lvl 2 vector (2d)
+            // if current line has stuff in it
+            if(!line.empty()){
+                // put that stuff into array lvl 2
+                board.push_back(str_to_intvec(line));
+    }
+            // else, increment and start populating lvl 3 (master) vector
     }
 
-    return lines;
+    return make_tuple(pull_nums, boards);
 }
 
 #endif // LINESTOARR
